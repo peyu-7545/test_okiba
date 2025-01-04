@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+    <title>Test</title>
+    <style>
+        body {
+            font-family: 'Playfair Display', serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .コンテナ {
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .入力セクション {
+            margin-bottom: 20px;
+        }
+        label {
+            margin-right: 10px;
+            font-weight: 600;
+            color: #444;
+        }
+        input[type="number"] {
+            width: 60px;
+            padding: 8px;
+            margin-right: 10px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fafafa;
+            transition: border 0.3s ease;
+        }
+        input[type="number"]:focus {
+            border: 1px solid #000;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #333;
+            color: white;
+            border: 1px solid #333;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background-color: #fff;
+            color: #333;
+            border-color: #333;
+            transform: scale(1.05);
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        .チェックボックスグリッド {
+            display: grid;
+            justify-content: center;
+            align-content: center;
+        }
+        .チェックボックスグリッド input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            appearance: none;
+            background-color: #fff;
+            border: 1px solid #333;
+            margin: 0;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .チェックボックスグリッド input[type="checkbox"]:checked {
+            background-color: #333;
+            border: 1px solid #333;
+        }
+        .出力セクション {
+            margin-top: 20px;
+        }
+        .出力セクション #二進数出力 {
+            font-weight: 600;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="コンテナ">
+        <h2>横幅と縦幅を指定して生成</h2>
+        <div class="入力セクション">
+            <label for="横幅">横幅:</label>
+            <input type="number" id="横幅" min="1" value="1">
+            <label for="縦幅">縦幅:</label>
+            <input type="number" id="縦幅" min="1" value="1">
+            <button id="生成ボタン">生成</button>
+        </div>
+        <div class="出力セクション">
+            <div id="チェックボックスコンテナ"></div>
+            <button id="数値化ボタン" style="display: none; margin-top: 20px;">数値化</button>
+            <div id="二進数出力" style="margin-top: 20px; font-weight: bold;"></div>
+            <button id="コピーボタン" style="display: none; margin-top: 20px;">二進数をコピー</button>
+        </div>
+    </div>
+    <script>
+        const 生成ボタン = document.getElementById('生成ボタン');
+        const 数値化ボタン = document.getElementById('数値化ボタン');
+        const チェックボックスコンテナ = document.getElementById('チェックボックスコンテナ');
+        const 二進数出力 = document.getElementById('二進数出力');
+        生成ボタン.addEventListener('click', () => {
+    const 横幅 = parseInt(document.getElementById('横幅').value, 10);
+    const 縦幅 = parseInt(document.getElementById('縦幅').value, 10);
+    if (チェックボックスコンテナ.innerHTML !== '') {
+        チェックボックスコンテナ.innerHTML = '';
+        数値化ボタン.style.display = 'none';
+        コピーボタン.style.display = 'none';
+    }
+    if (isNaN(横幅) || isNaN(縦幅) || 横幅 < 1 || 縦幅 < 1) {
+        alert('自然数を入力してください');
+        return;
+    }
+    const グリッド = document.createElement('div');
+    グリッド.classList.add('チェックボックスグリッド');
+    グリッド.style.gridTemplateColumns = `repeat(${横幅}, 20px)`;
+    グリッド.style.gridTemplateRows = `repeat(${縦幅}, 20px)`;
+
+    for (let i = 0; i < 横幅 * 縦幅; i++) {
+        const チェックボックス = document.createElement('input');
+        チェックボックス.type = 'checkbox';
+        グリッド.appendChild(チェックボックス);
+    }
+
+    チェックボックスコンテナ.appendChild(グリッド);
+    数値化ボタン.style.display = 'inline-block';
+});
+
+        数値化ボタン.addEventListener('click', () => {
+            const チェックボックス群 = チェックボックスコンテナ.querySelectorAll('input[type="checkbox"]');
+            const 横幅 = parseInt(document.getElementById('横幅').value, 10);
+            const 縦幅 = parseInt(document.getElementById('縦幅').value, 10);
+            let 二進数行群 = [];
+            for (let 行 = 0; 行 < 縦幅; 行++) {
+                let 二進数行 = '';
+                for (let 列 = 0; 列 < 横幅; 列++) {
+                    const インデックス = 行 * 横幅 + 列;
+                    二進数行 += チェックボックス群[インデックス].checked ? '1' : '0';
+                }
+                二進数行群.push(二進数行);
+            }
+            二進数出力.textContent = 二進数行群.join('/');
+            コピーボタン.style.display = 'inline-block';
+        });
+        const コピーボタン = document.getElementById('コピーボタン');
+            コピーボタン.addEventListener('click', () => {
+                const 二進数テキスト = 二進数出力.textContent;
+                navigator.clipboard.writeText(二進数テキスト).then(() => {
+                    alert('コピー完了');
+                });
+            });
+    </script>
+</body>
+</html>
