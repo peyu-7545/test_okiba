@@ -98,7 +98,7 @@
         <h2>横幅と縦幅を指定して生成</h2>
         <div class="入力セクション">
             <label for="横幅">横幅:</label>
-            <input type="number" id="横幅" min="1" value="1">
+            <input type="number" id="横幅" min="1" max="63" value="1">
             <label for="縦幅">縦幅:</label>
             <input type="number" id="縦幅" min="1" value="1">
             <button id="生成ボタン">生成</button>
@@ -118,15 +118,23 @@
         生成ボタン.addEventListener('click', () => {
     const 横幅 = parseInt(document.getElementById('横幅').value, 10);
     const 縦幅 = parseInt(document.getElementById('縦幅').value, 10);
+
+    if (横幅 > 63) { // 上限を超える場合
+        alert('横幅の上限は63です。それ以下の値を入力してください。');
+        return;
+    }
+
     if (チェックボックスコンテナ.innerHTML !== '') {
         チェックボックスコンテナ.innerHTML = '';
         数値化ボタン.style.display = 'none';
         コピーボタン.style.display = 'none';
     }
+
     if (isNaN(横幅) || isNaN(縦幅) || 横幅 < 1 || 縦幅 < 1) {
         alert('自然数を入力してください');
         return;
     }
+
     const グリッド = document.createElement('div');
     グリッド.classList.add('チェックボックスグリッド');
     グリッド.style.gridTemplateColumns = `repeat(${横幅}, 20px)`;
@@ -141,6 +149,7 @@
     チェックボックスコンテナ.appendChild(グリッド);
     数値化ボタン.style.display = 'inline-block';
 });
+
 
         数値化ボタン.addEventListener('click', () => {
             const チェックボックス群 = チェックボックスコンテナ.querySelectorAll('input[type="checkbox"]');
