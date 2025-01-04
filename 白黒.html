@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="ja">
+    
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
     <title>Test</title>
     <style>
+        
         body {
             font-family: 'Playfair Display', serif;
             margin: 0;
@@ -18,6 +20,7 @@
             background-color: #f9f9f9;
             color: #333;
         }
+        
         .コンテナ {
             text-align: center;
             background: #fff;
@@ -25,14 +28,17 @@
             border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
+        
         .入力セクション {
             margin-bottom: 20px;
         }
+        
         label {
             margin-right: 10px;
             font-weight: 600;
             color: #444;
         }
+        
         input[type="number"] {
             width: 60px;
             padding: 8px;
@@ -43,9 +49,11 @@
             background-color: #fafafa;
             transition: border 0.3s ease;
         }
+        
         input[type="number"]:focus {
             border: 1px solid #000;
         }
+        
         button {
             padding: 8px 16px;
             background-color: #333;
@@ -56,20 +64,24 @@
             font-size: 16px;
             transition: all 0.3s ease;
         }
+        
         button:hover {
             background-color: #fff;
             color: #333;
             border-color: #333;
             transform: scale(1.05);
         }
+        
         button:active {
             transform: scale(0.98);
         }
+        
         .チェックボックスグリッド {
             display: grid;
             justify-content: center;
             align-content: center;
         }
+        
         .チェックボックスグリッド input[type="checkbox"] {
             width: 20px;
             height: 20px;
@@ -80,17 +92,21 @@
             cursor: pointer;
             transition: background-color 0.2s, border-color 0.2s;
         }
+        
         .チェックボックスグリッド input[type="checkbox"]:checked {
             background-color: #333;
             border: 1px solid #333;
         }
+        
         .出力セクション {
             margin-top: 20px;
         }
+        
         .出力セクション #二進数出力 {
             font-weight: 600;
             color: #333;
         }
+        
     </style>
 </head>
 <body>
@@ -120,7 +136,7 @@
     const 縦幅 = parseInt(document.getElementById('縦幅').value, 10);
 
     if (横幅 > 63) { // 上限を超える場合
-        alert('横幅の上限は63です。それ以下の値を入力してください。');
+        alert('横幅の上限は63です。それ以下の値を入力しろください。');
         return;
     }
 
