@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <meta charset="UTF-8">
+<head>
+    <title>深夜テンションで作られたパズル(?)ゲーム</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        #text {
+            font-size: 50px;
+            letter-spacing: 10px;
+            margin-bottom: 20px; 
+        }
+
+        .buttons {
+            display: flex; 
+        }
+
+        button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            margin: 0 5px;
+            font-size: 25px;
+        }
+    </style>
+</head>
+<body>
+    <span id="text">0000000</span>
+
+    <div class="buttons">
+    <button onclick="buttonA()">A</button>
+    <button onclick="buttonB()">B</button>
+    <button onclick="buttonC()">C</button>
+    <button onclick="buttonD()">D</button>
+    <button onclick="buttonE()">E</button>
+    <button onclick="buttonF()">F</button>
+    <button onclick="buttonG()">G</button>
+    </div>
+
+    <script>
+        let isASwapped = false;
+        let count = 0;
+        let last = "0000000";
+
+        console.log("---Log---")
+
+        function buttonA() {
+            count += 1;
+            let text = document.getElementById("text").textContent;
+            last = text;
+            if (!isASwapped) {
+                text = text.split("");
+                text[0] = text[0] === '0' ? '1' : '0';
+                text[3] = text[3] === '0' ? '1' : '0';
+                text[5] = text[5] === '0' ? '1' : '0';
+            } else {
+                let index = text.indexOf('0');
+                if (index !== -1 && index < 6) {
+                    text = text.split("");
+                    text[index + 1] = text[index + 1] === '0' ? '1' : '0';
+                }
+            }
+            document.getElementById("text").textContent = text.join("");
+            console.log(`${count}:A|[${last}→${text.join("")}]`);
+        }
+
+        function buttonB() {
+            count += 1;
+            let text = document.getElementById("text").textContent;
+            last = text;
+            text = text.split("");
+            for (let i = 0; i < 3; i++) {
+                text[i] = (parseInt(text[i]) ^ parseInt(text[i+4])).toString();
+            }
+            document.getElementById("text").textContent = text.join("");
+            console.log(`${count}:B|[${last}→${text.join("")}]`);
+        }
+
+        function buttonC() {
+            count += 1;
+            let text = document.getElementById("text").textContent;
+            last = text;
+            text = text.split("");
+            let sum = text.reduce((a, b) => parseInt(a) + parseInt(b), 0);
+            if (sum === 1 || sum === 6) {
+                [text[1], text[6]] = [text[6], text[1]];
+            } else {
+                [text[2], text[5]] = [text[5], text[2]];
+            }
+            document.getElementById("text").textContent = text.join("");
+            console.log(`${count}:C|[${last}→${text.join("")}]`);
+        }
+
+        
+        function buttonD() {
+            count += 1;
+            isASwapped = !isASwapped;
+            console.log(`${count}:D|[${last}→${last}]`);
+        }
+
+        function buttonE() {
+            count += 1;
+            let text = document.getElementById("text").textContent;
+            last = text;
+            if (isASwapped) {
+                text = text.split("");
+                text[0] = text[0] === '0' ? '1' : '0';
+                text[3] = text[3] === '0' ? '1' : '0';
+                text[5] = text[5] === '0' ? '1' : '0';
+            } else {
+                let index = text.indexOf('0');
+                if (index !== -1 && index < 6) {
+                    text = text.split("");
+                    text[index + 1] = text[index + 1] === '0' ? '1' : '0';
+                }
+            }
+            document.getElementById("text").textContent = text.join("");
+            console.log(`${count}:E|[${last}→${text.join("")}]`);
+        }
+
+        function buttonF() {
+            count += 1;
+            let text = document.getElementById("text").textContent;
+            last = text;
+            text = text.split("");
+            text[2] = (parseInt(text[3]) * parseInt(text[4])).toString();
+            document.getElementById("text").textContent = text.join("");
+            console.log(`${count}:F|[${last}→${text.join("")}]`);
+        }
+
+        function buttonG() {
+            count += 1;
+            let text = document.getElementById("text").textContent;
+            last = text;
+            if (text === "1111111") {
+                alert("クリア\n回数"+count);
+                console.log(`${count}:G|${last}|Congratulation!`);
+            } else {
+            console.log(`${count}:G|[${last}→${last}]`);
+            }
+        }
+    </script>
+</body>
+</html>
