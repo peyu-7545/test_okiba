@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="romanize.js"></script>
     <style>
         /* CSSはあとで */
     </style>
@@ -13,14 +14,22 @@
     <button onclick="check()">判定</button>
     <script>
         function check() {
-            const text = document.getElementById("text").value;
+            let text = document.getElementById("text").value;
             const check = /^[ぁ-んァ-ヴｦ-ﾟa-zA-Z0-9]+$/.test(text);
             if (!check) {
                 alert("ごめんな、平仮名/カタカナ/英数字でおねがいするよ");
+                return;
+            } else {
+                text = text.split('').map(convertChar).join('');
             }
-            if (!/^[iI]+$/.test(check)) {
+            if (!/^[iI]+$/.test(text)) {
                 alert("iが含まれているようだ");
             }
+        }
+
+        // romazineライブラリでローマ字に変換
+        function convertChar(text) {
+            return romanize(text) || text;
         }
     </script>
 </body>
