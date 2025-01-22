@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* CSSはあとで */
+    </style>
+</head>
+<body>
+    <label for="text">判定したいテキスト:</label>
+    <input type="text" id="text">
+    <button onclick="check()">判定</button>
+    <script>
+        function check() {
+            const text = document.getElementById("text").value;
+            const check = /^[ぁ-んァ-ヴｦ-ﾟa-zA-Z0-9]+$/.test(text);
+            if (!check) {
+                alert("ごめんな、平仮名/カタカナ/英数字でおねがいするよ");
+            }
+            if (!/^[iI]+$/.test(check)) {
+                alert("iが含まれているようだ");
+            }
+        }
+    </script>
+</body>
+</html>
