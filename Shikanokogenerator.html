@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>しかのこジェネレーター</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        input, button, textarea {
+            font-size: 16px;
+            padding: 12px;
+            width: 100%;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .output-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .output-container button {
+            background-color: #007BFF;
+            color: white;
+        }
+        .output-container button:hover {
+            background-color: #0056b3;
+        }
+        textarea {
+            resize: none;
+            height: 120px;
+            line-height: 1.5;
+        }
+        .copy-button {
+            cursor: pointer;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #ff9900;
+            color: white;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        .copy-button:hover {
+            background-color: #cc7a00;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>しかのこジェネレーター</h1>
+        <input type="text" id="inputText" placeholder="文字列を入力してください" />
+        <div class="action-buttons">
+            <button id="encryptButton">暗号化</button>
+            <button id="decryptButton">復元</button>
+        </div>
+        <div class="output-container">
+            <textarea id="output" readonly></textarea>
+            <button class="copy-button" id="copyButton">コピー</button>
+        </div>
+    </div>
+    <script>
+        const numberToWord = {
+            "0": "ぬん",
+            "1": "しか",
+            "2": "のこ",
+            "3": "こし",
+            "4": "たん"
+        };
+        const wordToNumber = {
+            "ぬん": "0",
+            "しか": "1",
+            "のこ": "2",
+            "こし": "3",
+            "たん": "4"
+        };
+        document.getElementById("encryptButton").addEventListener("click", function() {
+            const inputText = document.getElementById("inputText").value;
+            let result = [];
+            for (let char of inputText) {
+                let ascii = char.charCodeAt(0); 
+                let base5 = convertToBase5(ascii); 
+                let converted = base5.split('').map(digit => numberToWord[digit]).join(''); 
+                result.push(converted);
+            }
+            document.getElementById("output").value = result.join(' ');
+        });
+        document.getElementById("decryptButton").addEventListener("click", function() {
+            const inputText = document.getElementById("inputText").value;
+            let words = inputText.split(' ');
+            let result = [];
+            words.forEach(word => {
+                let i = 0;
+                let base5 = '';
+                while (i < word.length) {
+                    let pair = word.slice(i, i + 2);
+                    if (wordToNumber[pair]) {
+                        base5 += wordToNumber[pair];
+                    }
+                    i += 2;
+                }
+                let ascii = parseInt(base5, 5);
+                if (!isNaN(ascii)) {
+                    result.push(String.fromCharCode(ascii));
+                }
+            });
+            const restoredText = result.join('');
+            document.getElementById("output").value = restoredText;
+        });
+        document.getElementById("copyButton").addEventListener("click", function() {
+            const outputText = document.getElementById("output");
+            outputText.select();
+            document.execCommand("copy");
+        });
+        function convertToBase5(number) {
+            let result = '';
+            while (number > 0) {
+                result = (number % 5) + result;
+                number = Math.floor(number / 5);
+            }
+            return result || '0';
+        }
+    </script>
+</body>
+</html>

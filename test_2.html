@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>適当に作ったサイトぉぉぉぉ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #fff;
+            overflow: hidden;
+            flex-direction: column;
+            text-align: center;
+            color: #333;
+            transition: background-color 0.15s, color 0.15s;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-message {
+            font-size: 1.3rem;
+            margin-bottom: 50px;
+            line-height: 1.5;
+            max-width: 90%;
+            margin: 0 auto;
+            white-space: pre-line;
+            cursor: pointer;
+        }
+
+        .spinner {
+            border: 10px solid #f3f3f3;
+            border-top: 10px solid #3498db;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            animation: spin 1.2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .theme-toggle {
+            position: absolute;
+            bottom: 20px;
+            left: 10px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 2.5rem;
+            z-index: 10;
+        }
+
+        .theme-toggle span {
+            margin-left: 15px;
+            transition: opacity 0.3s ease;
+        }
+
+        .theme-toggle span:hover {
+            opacity: 0.7;
+        }
+
+        body.dark {
+            background-color: #333;
+            color: #fff;
+        }
+
+        body.dark .spinner {
+            border-top: 10px solid #9b59b6;
+        }
+
+        body.dark .theme-toggle span {
+            color: #fff;
+        }
+
+        .command-window {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            max-width: 80%;
+            display: none;
+        }
+    </style>
+    <link rel="icon" type="image/png" href="icon.png">
+</head>
+<body>
+    <div class="content">
+        <div class="loading-message" id="loadingMessage" onclick="showCommandPrompt()">読み込み中...<br>ファイルが大きいので許してね</div>
+        <div class="spinner"></div>
+        <div class="next-phase-message" id="nextPhaseMessage" style="display:none;">あなたの勝ちです=)</div> 
+    </div>
+
+    <div class="theme-toggle" onclick="toggleTheme()">
+        <span id="moon">☽</span>
+        <span id="sun" style="display:none;">☀</span>
+    </div>
+
+    <div class="command-window" id="commandWindow">
+        <div>コマンド: next</div>
+    </div>
+
+    <script>
+        let isDark = false;
+        let inputSequence = [];
+
+        function toggleTheme() {
+            isDark = !isDark;
+            document.body.classList.toggle('dark', isDark);
+            document.getElementById('moon').style.display = isDark ? 'none' : 'inline';
+            document.getElementById('sun').style.display = isDark ? 'inline' : 'none';
+        }
+
+        function showCommandPrompt() {
+            document.getElementById('commandWindow').style.display = 'block';
+        }
+
+        document.getElementById('loadingMessage').addEventListener('click', function() {
+            showCommandPrompt();
+        });
+
+        document.addEventListener('keydown', function(event) {
+            inputSequence.push(event.key.toLowerCase());
+
+            if (inputSequence.length > 4) {
+                inputSequence.shift();
+            }
+
+            if (inputSequence.join('') === 'next') {
+                document.getElementById('loadingMessage').style.display = 'none';
+                document.getElementById('nextPhaseMessage').style.display = 'block';
+                document.querySelector('.spinner').style.display = 'none';
+                document.getElementById('commandWindow').style.display = 'none';
+                inputSequence = [];
+            }
+        });
+
+        document.body.style.overflow = 'hidden';
+        document.body.style.touchAction = 'none';
+    </script>
+</body>
+</html>
