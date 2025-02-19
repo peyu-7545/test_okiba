@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スターン・ブロコット木 近似分数変換</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #output { margin-top: 20px; white-space: pre-wrap; text-align: left; display: inline-block; }
+        table { border-collapse: collapse; margin: 0 auto; }
+        th, td { border: 1px solid black; padding: 5px; text-align: center; }
+    </style>
+</head>
+<body>
+    <h1>スターン・ブロコット木 近似分数変換</h1>
+    <p>2^99未満の正実数の分数近似が行えます</p>
+    <a href="https://keisan.casio.jp/exec/user/1461330641">着想を得たサイト</a><br>
+    <input type="number" id="inputNumber" step="any" placeholder="数値を入力">
+    <button onclick="convert()">変換</button>
+    <div id="output"></div>
+
+    <script>
+        function countFactors(n) {
+            let count = 0, twoCount = 0;
+            for (let i = 1; i <= n; i++) {
+                if (n % i === 0) {
+                    count++;
+                    if (i % 2 === 0) twoCount++;
+                }
+            }
+            return [count, twoCount];
+        }
+
+        function closestSquareAndCube(n) {
+            let sqrtBase = Math.round(Math.sqrt(n));
+            let cbrtBase = Math.round(Math.cbrt(n));
+            let sqrt = `${sqrtBase}^2=${sqrtBase ** 2}`;
+            let cbrt = `${cbrtBase}^3=${cbrtBase ** 3}`;
+            return [sqrt, cbrt];
+        }
+
+        function sternBrocotApproximate(target) {
+            const epsilon = target * 0.001;
+            let leftNum = 0, leftDen = 1;
+            let rightNum = 1, rightDen = 0;
+            let approximations = [];
+
+            while (true) {
+                let midNum = leftNum + rightNum;
+                let midDen = leftDen + rightDen;
+                let approx = midNum / midDen;
+                let error = Math.abs(approx - target);
+                
+                if (error < epsilon) {
+                    let approxValue = approx.toPrecision(10);
+                    let errorValue = Math.abs(approx - target).toPrecision(5);
+                    let errorPercent = ((Math.abs(approx - target) / target) * 100).toPrecision(5);
+                    let [numFactors, numTwoFactors] = countFactors(midNum);
+                    let [denFactors, denTwoFactors] = countFactors(midDen);
+                    let [numSquare, numCube] = closestSquareAndCube(midNum);
+                    let [denSquare, denCube] = closestSquareAndCube(midDen);
+                    approximations.push(`<tr><td>${midNum} / ${midDen}</td><td>${approxValue}</td><td>${errorValue} : ${errorPercent}%</td><td>${numFactors}個(${numTwoFactors}個)</td><td>${denFactors}個(${denTwoFactors}個)</td><td>${numSquare} , ${numCube}</td><td>${denSquare} , ${denCube}</td></tr>`);
+                }
+                if (midNum >= 2n ** 99n || midDen >= 2n ** 99n) {
+                    break;
+                }
+                if (approx === target) {
+                    break;
+                }
+                if (approx < target) {
+                    leftNum = midNum;
+                    leftDen = midDen;
+                } else {
+                    rightNum = midNum;
+                    rightDen = midDen;
+                }
+            }
+
+            return approximations.length > 0 ? approximations : ["<tr><td colspan='7'>適切な分数が見つかりませんでした</td></tr>"];
+        }
+
+        function convert() {
+            const inputElem = document.getElementById("inputNumber");
+            const outputElem = document.getElementById("output");
+            const inputValue = parseFloat(inputElem.value);
+            
+            if (isNaN(inputValue) || inputValue <= 0) {
+                outputElem.innerHTML = "<p>正しい数値を入力してください。</p>";
+                return;
+            }
+
+            const result = sternBrocotApproximate(inputValue);
+            outputElem.innerHTML = `<table>
+                <tr>
+                    <th>分数</th>
+                    <th>近似値</th>
+                    <th>誤差(値) : 誤差(%)</th>
+                    <th>分子の約数(そのうち2)</th>
+                    <th>分母の約数(そのうち2)</th>
+                    <th>分子に最も近い累乗数</th>
+                    <th>分母に最も近い累乗数</th>
+                </tr>
+                ${result.join('')}
+            </table>`;
+        }
+    </script>
+</body>
+</html>
