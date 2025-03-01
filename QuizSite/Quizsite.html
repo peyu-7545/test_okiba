@@ -68,11 +68,13 @@
 
         let CurrentQuestionNum = 0; // 今何問目か
         let CorrectCount = 0; // 正解数
+        let StartTime,EndTime; // RTA用の時間変数
 
         const QuestionNum = 69; // 問題数
         
         // クイズを始める
         function StartQuiz() {
+            StartTime = Date.now();
             Questions = [...Questions].sort(() => Math.random() - 0.5); // 問題リストシャッフル
             document.getElementById("StartScreen").classList.add("hidden"); // スタート画面を非表示
             document.getElementById("QuizScreen").classList.remove("hidden"); // クイズ画面を表示
@@ -107,6 +109,8 @@
 
         // 結果発表
         function ShowResult() {
+            EndTime = Date.now();
+            let RTATime = (EndTime - StartTime) / 1000);
             document.getElementById("QuizScreen").classList.add("hidden"); // クイズ画面を非表示
             document.getElementById("ResultScreen").classList.remove("hidden"); // 結果画面を表示
             let CorrectAnswerRate = ((CorrectCount/Questions.length)*100).toFixed(2); // 正答率の計算
@@ -126,6 +130,7 @@
                 default:Message+="わざとだろ?w";
             }
             document.getElementById("結果").textContent = Message; // メッセージを表示
+            console.log(`RTATime:${RTATime}sec|正答率:${CorrectAnswerRate}`);
         }
     </script>
 </body>
