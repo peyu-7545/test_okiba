@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二択クイズ</title>
+    <style>
+        /* CSS苦手なのでここだけはAIにやらせました
+           今度レイアウトとか勉強したいね 
+           誰か教えて～() */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8f8f8;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .hidden {
+            display: none;
+        }
+        .Button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .Correct { background-color: #4caf50; color: white; }
+        .InCorrect { background-color: #f44336; color: white; }
+    </style>
+</head>
+<body>
+    <!-- スタート画面の要素 -->
+    <div class="container" id="StartScreen">
+        <h1>この言葉は誰が言ったでしょうか？二択クイズ</h1>
+        <p>鯖主なら○、それ以外は×を選択してください！</p>
+        <button class="Button" onclick="StartQuiz()">スタート</button>
+    </div>
+    
+    <!--　クイズ画面の要素 -->
+    <div class="container hidden" id="QuizScreen">
+        <h2 id="QuestionText"></h2><!-- 問題文 -->
+        <button class="Button" onclick="CheckAnswer('A')" id="BottonA">○</button>
+        <button class="Button" onclick="CheckAnswer('B')" id="BottonB">×</button>
+    </div>
+    
+    <!-- 結果画面の要素 -->
+    <div class="container hidden" id="ResultScreen">
+        <h2>結果発表！！！</h2>
+        <p id="結果"></p><!-- 結果を表示するテキスト -->
+        <button class="Button" onclick="location.reload()">▶もう一度挑戦する</button><!-- 再読み込みボタン -->
+    </div>
+    
+    <script src="QuizSite_QuestionA.js"></script>
+    <script src="QuizSite_QuestionB.js"></script>
+    <script>
+        // ソースコード見てるそこの君
+        // ズルをするんじゃあないぞ
+
+        // 変数名が変なのは英語苦手な私のガバガバ翻訳によるものです
+        // やはり私には日本語変数がお似合いのようだ
+
+        // 組み合わせる
+        let Questions = [
+            ...QuestionA.map(text => ({ text, answer: "A" })),
+            ...QuestionB.map(text => ({ text, answer: "B" }))
+        ];
+
+        let CurrentQuestionNum = 0; // 今何問目か
+        let CorrectCount = 0; // 正解数
+
+        const QuestionNum = 69; // 問題数
+        
+        // クイズを始める
+        function StartQuiz() {
+            Questions = [...Questions].sort(() => Math.random() - 0.5); // 問題リストシャッフル
+            document.getElementById("StartScreen").classList.add("hidden"); // スタート画面を非表示
+            document.getElementById("QuizScreen").classList.remove("hidden"); // クイズ画面を表示
+            ShowQuestion(); // 問題を表示する
+        }
+
+        // 問題表示
+        function ShowQuestion() {
+            if (CurrentQuestionNum < QuestionNum - 1) {
+                document.getElementById("QuestionText").textContent = Questions[CurrentQuestionNum].text; // 問題文を表示
+            } else {
+                ShowResult(); // 問題数に到達していたら結果発表へ移る
+            }
+        }
+
+        function CheckAnswer(PlayerAnswer) {
+            let CorrectAnswer = Questions[CurrentQuestionNum].answer; // 正しい答え
+            if (PlayerAnswer === CorrectAnswer) {
+                CorrectCount++; // 合っていたら正解数をプラス
+                document.getElementById(`Botton${PlayerAnswer}`).classList.add("Correct"); // ボタンを緑に
+            } else {
+                document.getElementById(`Botton${PlayerAnswer}`).classList.add("InCorrect"); // ボタンを赤に
+            }
+            
+            setTimeout(() => { // 250ms経過後の処理
+                document.getElementById(`BottonA`).classList.remove("Correct","InCorrect"); // ボタンAを元に戻す
+                document.getElementById(`BottonB`).classList.remove("Correct","InCorrect"); // ボタンBを元に戻す
+                CurrentQuestionNum++; // 今何問目かを一増やす(次の問題へ)
+                ShowQuestion(); // 次の問題を表示
+            }, 250);
+        }
+
+        // 結果発表
+        function ShowResult() {
+            document.getElementById("QuizScreen").classList.add("hidden"); // クイズ画面を非表示
+            document.getElementById("ResultScreen").classList.remove("hidden"); // 結果画面を表示
+            let CorrectAnswerRate = ((CorrectCount/Questions.length)*100).toFixed(2); // 正答率の計算
+            let Message = "あなたの正答率は" + CorrectAnswerRate + "%です!"; // メッセージ前半
+            switch(true){ // 正答率に応じたメッセージ後半部分
+                case CorrectAnswerRate==100:Message+="百点満点だ！素晴らしい！";break;
+                case CorrectAnswerRate>= 90:Message+="惜しい！次こそはいけるぞ！";break;
+                case CorrectAnswerRate>= 80:Message+="なかなかやるねぇ！";break;
+                case CorrectAnswerRate>= 70:Message+="おーいいね！";break;
+                case CorrectAnswerRate>= 60:Message+="そこそこの正答率!";break;
+                case CorrectAnswerRate>= 50:Message+="半分！頑張った";break;
+                case CorrectAnswerRate>= 40:Message+="まぁまぁだね";break;
+                case CorrectAnswerRate>= 30:Message+="マジかよ...";break;
+                case CorrectAnswerRate>= 20:Message+="もう一度やってみよう...か";break;
+                case CorrectAnswerRate>= 10:Message+="さすがに間違えすぎじゃない...?";break;
+                case CorrectAnswerRate>   0:Message+="大丈夫...?";break;
+                default:Message+="わざとだろ?w";
+            }
+            document.getElementById("結果").textContent = Message; // メッセージを表示
+        }
+    </script>
+</body>
+</html>
