@@ -110,7 +110,7 @@
         // 結果発表
         function ShowResult() {
             EndTime = Date.now();
-            let RTATime = (EndTime - StartTime) / 1000);
+            let RTATime = (EndTime - StartTime) / 1000;
             document.getElementById("QuizScreen").classList.add("hidden"); // クイズ画面を非表示
             document.getElementById("ResultScreen").classList.remove("hidden"); // 結果画面を表示
             let CorrectAnswerRate = ((CorrectCount/Questions.length)*100).toFixed(2); // 正答率の計算
