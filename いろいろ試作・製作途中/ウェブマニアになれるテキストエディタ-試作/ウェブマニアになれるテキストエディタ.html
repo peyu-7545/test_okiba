@@ -1,0 +1,38 @@
+<html lang="ja">
+    <meta charset="UTF-8">
+    <head>
+        <title>ウェブマニアになれるテキストエディタv0.1</title>
+        <style>
+            textarea {
+                width: 80%;
+                display: block;
+            }
+
+            p {
+                width: 80%;
+                border: 1px solid#ccc;
+                padding: 10px
+            }
+        </style>
+    </head>
+    <body>
+        <h1>ウェブマニアになれるテキストエディタv0.1</h1>
+        <textarea id="inputarea" rows="10" cols="50" placeholder="ここに入力"></textarea>
+        <p id="output"></p>
+        <script src="wordlist.js"></script>
+    <script>
+        const textArea = document.getElementById('inputarea');
+        const output = document.getElementById('output');
+
+        textArea.addEventListener('input', function() {
+            let text = textArea.value;
+            for (const key in list) {
+                if (list.hasOwnProperty(key)) {
+                    text = text.replace(new RegExp(key, 'g'), list[key]);
+                }
+            }
+            output.textContent = text;
+        });
+    </script>
+</body>
+</html>

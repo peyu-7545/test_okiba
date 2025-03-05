@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>周波数指定で音を鳴らす</title>
+</head>
+<body>
+  <button onclick="playSound(440)">440Hz の音を鳴らす</button>
+  <button onclick="playSound(440)">880Hz の音を鳴らす</button>
+
+  <script>
+    function playSound(frequency) {
+      const audioCtx = new AudioContext();
+      const oscillator = audioCtx.createOscillator();
+
+      oscillator.type = 'sine'; // 波形の種類 (sine, square, triangle, sawtooth など)
+      oscillator.frequency.value = frequency; // 周波数を指定
+      oscillator.connect(audioCtx.destination); // スピーカーに接続
+
+      oscillator.start(); // 音の再生を開始
+
+      // 1秒後に音を停止 (必要に応じて調整)
+      setTimeout(() => {
+        oscillator.stop();
+      }, 2000000);
+    }
+  </script>
+</body>
+</html>

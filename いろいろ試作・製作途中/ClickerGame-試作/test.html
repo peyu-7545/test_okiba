@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System.html</title>
+    <style>
+        body {
+            background-color: #222;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 10px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            margin-top: 10px;
+            gap: 5px;
+        }
+        .tile {
+            width: 280px;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #444;
+            display: none;
+            transition: all 0.5s;
+            text-align: left;
+        }
+        .tile.visible {
+            display: block;
+            margin: 5px;
+        }
+        .tile.unlocked {
+            background-color: #fff;
+            color: black;
+        }
+        .tile .title, .tile .description {
+            margin: 3px 0;
+        }
+        .tile .title {
+            font-weight: bold;
+        }
+        .tile .description {
+            font-size: 0.9em;
+        }
+        .tile.locked .title, .tile.locked .description {
+            text-align: center;
+        }
+        /**/
+    </style>
+</head>
+<body>
+    <button onclick="Ncount = 0">リセット</button>
+    <p id="Ncounter"></p>
+    <div id="tileContainer"></div>
+    <script>
+        const Ncounter = document.getElementById("Ncounter");
+        const tilesData = [
+            ["ウェブマニアと雑談", `鯖主を含めた雑談場。しかし鯖主はどこにでも現れるので意味をなしていない。`, 10],
+            ["総合雑談1", `第一の雑談。日々話題が尽きず、議論が交わされる重要なチャンネル。`, 50],
+            ["総合雑談2", `総合雑談1が密のときに使われる。最近は若干過疎り気味。`, 100],
+            ["つぶやき部屋", `別名「総合雑談3」。メンバーが日常的に呟く。`, 200]
+        ];
+
+        let Ncount = 0;
+        const container = document.getElementById("tileContainer");
+        let tiles = [];
+        
+        tilesData.forEach((data, index) => {
+            const tile = document.createElement("div");
+            tile.className = "tile locked";
+            if (index === 0) tile.classList.add("visible");
+
+            tile.innerHTML = `
+                <h2 class="title">???</h2>
+                <p class="description">???</p>
+            `;
+            
+            container.prepend(tile);
+            tiles.push({ element: tile, data });
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "n" || event.key === "N") {
+                Ncount++;
+                Ncounter.textContent = Ncount;
+                
+                tiles.forEach((tile, index) => {
+                    if (Ncount >= tile.data[2]) {
+                        tile.element.classList.add("unlocked");
+                        tile.element.classList.remove("locked");
+                        tile.element.querySelector(".title").textContent = tile.data[0];
+                        tile.element.querySelector(".description").textContent = tile.data[1];
+                    }
+                    if (index > 0 && Ncount >= tiles[index - 1].data[2]) {
+                        tile.element.classList.add("visible");
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
