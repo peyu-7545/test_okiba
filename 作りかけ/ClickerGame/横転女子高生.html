@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data.html</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="UI全体">
+        <div class="left">
+            <button onclick="Count = 0;CountElement.textContent='0Me';">リセット</button>
+        </div>
+        <div class="right">
+            <div class="right-fixed-element-top">
+                <span id="Count">0Me</span>
+            </div>
+            <div id="tileContainer"></div>
+            <div class="right-fixed-element-bottom">
+                <p id="box-element">クリックまたはスペースキーを押してメッセージを送信</p>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

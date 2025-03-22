@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>画像生成プログラム</title>
+</head>
+<body>
+  <input type="text" id="textInput" placeholder="テキストを入力">
+  <input type="file" id="imageInput" accept="image/*">
+  <button id="generateButton">画像生成</button>
+  <canvas id="myCanvas" width="500" height="300" style="border: 1px solid black;"></canvas>
+  <a id="downloadLink" download="generated_image.png">ダウンロード</a>
+
+  <script>
+    const textInput = document.getElementById('textInput');
+const imageInput = document.getElementById('imageInput');
+const generateButton = document.getElementById('generateButton');
+const canvas = document.getElementById('myCanvas');
+const ctx = canvas.getContext('2d');
+const downloadLink = document.getElementById('downloadLink');
+
+generateButton.addEventListener('click', () => {
+  const text = textInput.value;
+  const imageFile = imageInput.files[0];
+
+  // Canvasをクリア
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  if (imageFile) {
+    // 画像ファイルを読み込み、Canvasに描画
+    const image = new Image();
+    image.onload = () => {
+      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+      drawText(text);
+    };
+    image.src = URL.createObjectURL(imageFile);
+  } else {
+    drawText(text);
+  }
+});
+
+function drawText(text) {
+  // テキストを描画
+  ctx.font = '30px sans-serif';
+  ctx.fillStyle = 'black';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+
+  // ダウンロードリンクを更新
+  downloadLink.href = canvas.toDataURL('image/png');
+}
+  </script>
+</body>
+</html>

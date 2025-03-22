@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    </style>
+</head>
+<body>
+    <h1>メッセージ画像ジェネレーター</h1>
+    <span>メッセージ画像を作成できます</span>
+    <div class="controllarea">
+        <div class="container">
+            <h3>画像</h3>
+            <input type="file" id="inputimage" accept="image/*">
+        </div>
+        <div class="container">
+            <h3>名前</h3>
+            <input type="text" id="inputname">
+        </div>
+        <div class="container">
+            <h3>時刻</h3>
+            <span>現在の時刻を使用する</span>
+            <input type="checkbox" id="inputcheck"><br>
+            <div id="inputtimecontainer">
+                <span>または任意の時刻を入力:</span>
+                <input type="datetime-local" id="inputtime">
+            </div>
+        </div>
+        <div class="container">
+            <h3>ロールカラー</h3>
+            <input type="color" id="inputcolor">
+        </div>
+        <div class="container">
+            <h3>背景色</h3>
+            <input type="radio" id="lighttheme" name="themeselect">
+            <label for="lighttheme">ライトテーマ</label><br>
+            <input type="radio" id="darktheme" name="themeselect" checked>
+            <label for="darktheme">ダークテーマ</label>
+        </div>
+        <div class="container">
+            <h3>発言内容</h3>
+            <textarea rows="3" cols="30" id="inputtext"></textarea>
+        </div>
+        <button onclick="generate()">生成</button>
+    </div>
+    <div id="imageoutput"></div>
+
+    <script>
+        const imageoutput = document.getElementById("imageoutput");
+        // 時刻関連
+        const check = document.getElementById("inputcheck");
+        const inputtimecontainer = document.getElementById("inputtimecontainer");
+
+        check.addEventListener("change",() => {
+            inputtimecontainer.style.display = check.checked ? "none" : "block";
+        });
+
+        // 時刻を変換する関数
+        function timeconvert(time){
+            time = new Date(time);
+            const year = time.getFullYear();
+            const month = String(time.getMonth() + 1).padStart(2, '0');
+            const day = String(time.getDate()).padStart(2, '0');
+            const hour = String(time.getHours()).padStart(2, '0');
+            const minute = String(time.getMinutes()).padStart(2, '0');
+            return [year,month,day,hour,minute];
+        }
+
+        function generate(){
+            // 画像、名前、時刻、ロールカラー、背景色、テキストを取得する
+            let image = document.getElementById("inputimage").files[0];
+            const name = document.getElementById("inputname").value;
+            let time = document.getElementById("inputtime").value;
+            const color = document.getElementById("inputcolor").value;
+            const bgcolor = document.getElementById("lighttheme").checked ? "rgb(255 255 255)":"rgb(49 51 56)";
+            const text = document.getElementById("inputtext").value;
+            
+            if(!image){
+                alert("画像を指定してください");
+                return;
+            }else{
+                image = new Image(image);
+            }
+            if(!name){
+                //alert("名前を入力してください");
+                //return;
+            }else if(name.length>32){
+                //alert("名前は32文字以内でないといけません");
+                //return;
+            };
+
+            // 入力された時刻の処理
+            if(check.checked){
+                time = (`今日 ${timeconvert(Date.now()).slice(3,5).join(":")}`);
+            }else if(!time){
+                //alert("時刻を入力してください");
+                //return;
+            } else{
+                const convertedtime = timeconvert(time);
+                const nowtime = new Date();
+                nowtime.setSeconds(0, 0);
+                time = new Date(time);
+                new Date(time).setSeconds(0, 0);
+                const diffDays = Math.ceil((time.getTime()-nowtime.getTime())/86400000);
+                let upperdate;
+                switch(diffDays){
+                    case -1:upperdate = "昨日";break;
+                    case 0:upperdate = "今日";break;
+                    case 1:upperdate = "明日";break;
+                    default:upperdate = convertedtime.slice(0,3).join("/");
+                }
+                time = (`${upperdate} ${convertedtime.slice(3,5).join(":")}`);
+            };
+            console.log(image,name,time,color,bgcolor,text);
+
+            const canvas = document.createElement("canvas");
+            imageoutput.appendChild(canvas);
+            const ctx = canvas.getContext("2d");
+            const w=400;h=300;
+            canvas.width=w;
+            canvas.height=h;
+            ctx.fillRect(0,0,w,h);
+            ctx.drawImage(image,0,0,50,50);
+        };
+    </script>
+</body>
+</html>
