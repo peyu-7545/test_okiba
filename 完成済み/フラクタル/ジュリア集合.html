@@ -44,7 +44,8 @@
           const absorute = nextx**2+nexty**2;
           if(absorute>4){
             return false;
-          }else if(count==0){
+          }
+        if(count==0){
             return true;
           }
           return calcjuliaset(nextx,nexty,count-1);
