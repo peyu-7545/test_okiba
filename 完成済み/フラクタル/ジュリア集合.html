@@ -18,12 +18,9 @@
         const canvas = document.getElementById("canvas");
         const ctx = canvas.getContext("2d");
         let canvassize;
-        const graphsize = 10;
-        const pointsize = 4;
         window.onresize = setup;
-        let pointlist = [];
-        let 再描画中;
         setup();
+        const c = {re:0.1225,im:-0.7448};
 
         function setup(){
             canvassize = Math.min(window.innerWidth,window.innerHeight)*0.9;
@@ -34,38 +31,23 @@
 
         function draw(){
             ctx.clearRect(0,0,canvassize,canvassize);
-            ctx.beginPath();
-            // x軸
-            ctx.moveTo(0,canvassize/2);
-            ctx.lineTo(canvassize,canvassize/2);
-            // y軸
-            ctx.moveTo(canvassize/2,0);
-            ctx.lineTo(canvassize/2,canvassize);
-            ctx.stroke();
-            // 描画した点を再描画
-            再描画中 = true;
-            for(const point of pointlist){
-                dotpoint(point.x,point.y);
-            }
-            再描画中 = false;
+            for(let x=0;x<canvassize;x++){
+              for(let y=0;y<canvassize;y++){
+                if(calcjuliaset(4*x/canvassize-2,4*y/canvassize,30)){
+                  ctx.arc(x,y,0.5,0,Math.PI*2);
+                }
         }
 
-        function calc(p){
-            return canvassize*Math.abs(p+graphsize)/(2*graphsize);
-        }
-
-        function dotpoint(x,y){
-            ctx.beginPath();
-            ctx.arc(calc(x),calc(-y),pointsize,0,2*Math.PI);
-            ctx.fill();
-            if(!再描画中){
-            pointlist.push({x:x,y:y});
-            };
-        }
-
-        function randompoint(){
-            dotpoint(20*Math.random()-10,20*Math.random()-10);
-        }
+        function calcjuliaset(x,y,count){
+          const nextx = x**2-y**2+c.re;
+          const nexty = 2*x*y+c.im;
+          const absorute = nextx**2+nexty**2;
+          if(absorute>4){
+            return false;
+          }else if(count==0){
+            return true;
+          }
+          return calcjuliaset(nextx,nexty,count-1);
     </script>
 </body>
 </html>
