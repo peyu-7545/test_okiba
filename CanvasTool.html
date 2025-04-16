@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./style.css" rel="stylesheet"/>    
+</head>
+<body>
+    <header>
+        <h1>CanvasTool</h1>
+    </header>
+    <div id="UIdiv">
+        <div class="left_div">
+            <div class="canvas_div">
+                <canvas id="canvas"></canvas>
+            </div>
+        </div>
+        <div id="resizebar"></div>
+        <div class="right_div">
+            <textarea id="textarea" rows="3">Axiom:F;</textarea>
+            <h3>Ver.0.1</h3>
+            <p><a href="https://ja.wikipedia.org/wiki/L-system">Lsystem</a>を用いてCanvasに図形の描画ができます</p>
+            <b>現在使用できる命令</b>
+            <ul>
+                <p><strong>"F"</strong>:前進しながら描画する</p>
+                <p><strong>"+"</strong>:右に一定の角度回転する</p>
+                <p><strong>"-"</strong>:左に一定の角度回転する</p>
+                <p><strong>"["</strong>:現在の位置、角度を保存する</p>
+                <p><strong>"]"</strong>:保存した状態を復元する</p>
+            </ul>
+            <b>描画例</b>
+            <p>上のテキストエリアの<strong>Axiom:F;</strong>に続けるか次の行を選択し<br>
+            <strong>"F->F-F++F-F;</strong>と打ってみてください</p>
+            <p>他にも組み合わせ次第で様々な図形を作成できます</p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
