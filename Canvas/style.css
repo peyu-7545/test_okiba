@@ -1,5 +1,6 @@
 * {
     box-sizing: border-box;
+    user-select: none;
 }
 
 body {
@@ -17,7 +18,10 @@ header {
     align-items: center;
 }
 
-h1, h2, h3, p {
+h1,
+h2,
+h3,
+p {
     margin: 0;
 }
 
@@ -74,7 +78,6 @@ textarea {
     width: 7px;
 }
 
-/* レスポンシブって神だね(今更) */
 @media (max-width: 500px) {
     #UIdiv {
         display: flex;
@@ -108,4 +111,37 @@ textarea {
     textarea {
         width: 100%;
     }
+}
+
+.tabctrl {
+    display: inline-block;
+    border-width: 1px 1px 0px;
+    border-style: solid;
+    padding: 0.75em 1em;
+    text-decoration: none;
+    background-color: white;
+    position: relative;
+    font-weight: bold;
+}
+
+.tabctrl:hover {
+    text-decoration: underline;
+}
+
+
+.tabs {
+    border: 1px solid black;
+    margin-top: -1px;
+    padding: 2%;
+    position: relative;
+    z-index: 0;
+    max-height: calc(100vh - 100px);
+}
+
+ul {
+    margin: 3px;
+}
+
+.inputnum{
+    width:20%;
 }
