@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello,3D_World!</title>
+
+    <!-- Three.jsを用いるにはインポートする必要がある-->
+    <script type="importmap">
+        {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@v0.175.0/build/three.module.js"}}
+    </script>
+
+</head>
+
+<!-- 今回はCSSの量が少ないので各要素に記述する -->
+
+<body style="margin:0">
+    <canvas style="width:100vh;height:100vh"></canvas>
+
+    <!-- ここが根幹-->
+    <script type="module">
+
+        // まずインポート
+        import * as THREE from "three";
+
+        // キャンバス要素を取得する
+        const canvas = document.querySelector("canvas");
+
+        // レンダラー(グラフィックを描画する機構のこと)を定義、描画対象にキャンバスを指定
+        const renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
+
+        // カメラ(3Dの物体を見る視点のこと)を定義、4つの変数は以下の通り
+        // 構文 PerspectiveCamera(視野角,アスペクト比,最低距離,最高距離)
+        const camera = new THREE.PerspectiveCamera(80, 1, 0.1, 5);
+        // camera.positionはカメラの座標
+        camera.position.z = 2;
+
+        // シーン(3Dの物体を置く場所のこと)を定義
+        const scene = new THREE.Scene();
+
+        // いよいよ3D物体の作成
+        
+        // BoxGeometryメソッドで直方体の頂点を定義、変数はx,y,zそれぞれの長さのため、今回は立方体となる
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
+
+        // Materialは物体の色や材質などを定義する
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+
+        // この二つを組み合わせ、物体を作成する
+        const cube = new THREE.Mesh(geometry, material);
+
+        // 作成した物体は忘れずにシーンに追加しておく。作成した物体はデフォルトでは原点(0,0,0)に配置される
+        scene.add(cube);
+
+        // 関数の呼び出し
+        log();
+        animation();
+
+        // 関数の定義
+
+        // レンダリングで使う様々なパラメータをわかりやすくしてコンソールに出力する
+        function log() {
+            console.group("カメラ関連");
+            console.log(`カメラ位置:(${[camera.position.x, camera.position.y, camera.position.z]})`);
+            console.log(`視野:${camera.fov}°`);
+            console.log(`アスペクト比(縦横比):${camera.aspect}`);
+            console.log(`描画する距離:最低${camera.near}~最高${camera.far}`);
+            console.groupEnd();
+        }
+
+        // この関数で描画を行う。これまでにしてきたのはあくまで事前準備であって、これから描画である。
+        function animation() {
+            // レンダラーのレンダーメソッドでシーンとカメラを組み合わせ、描画する
+            renderer.render(scene, camera);
+
+            // 3Dであることを可視化するためにx,y軸で回転させる
+            cube.rotation.x += 0.01;
+            cube.rotation.y += 0.01;
+
+            // 次のフレームを呼び出し再帰的に描画し続ける
+            requestAnimationFrame(animation);
+        }
+
+        // キャンバスの中央に緑色の回転する立方体が見えるはず
+
+        // これだけ長いコードを書いてやったのは立方体一つを描画しただけである。まだまだ序の口
+        // ただじっくり学べばそれほど良い作品ができるのは間違いない...はず
+
+        // いますぐThree.jsを初めましょう！
+    </script>
+</body>
+
+</html>
