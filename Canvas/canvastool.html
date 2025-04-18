@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./style.css" rel="stylesheet" />
+</head>
+
+<body>
+    <header>
+        <h1>CanvasTool</h1>
+    </header>
+    <div id="UIdiv">
+        <div class="left_div">
+            <div class="canvas_div">
+                <canvas id="canvas"><canvas>
+            </div>
+        </div>
+        <div id="resizebar"></div>
+        <div class="right_div">
+            <textarea id="textarea" rows="3">Axiom:F;</textarea>
+            <div class="tabcontrol">
+                <p class="tabctrl">説明</p>
+                <p class="tabctrl">基本構文</p>
+                <p class="tabctrl">パラメーター</p>
+                <p class="tabctrl">ログ</p>
+            </div>
+            <div class="tabbody">
+                <div class="tabs">
+                    <h3>Ver.0.0.2</h3>
+                    <p><a href="https://ja.wikipedia.org/wiki/L-system">Lsystem</a>を用いてCanvasに図形の描画ができます</p>
+                    <b>描画例</b>
+                    <p>上のテキストエリアの<strong>Axiom:F;</strong>に続けるか次の行を選択し<br>
+                        <strong>F->F-F++F-F;</strong>と打ってみてください
+                    </p>
+                    <p>他にも組み合わせ次第で様々な図形を作成できます</p>
+                </div>
+                <div class="tabs">
+                    <ul>
+                        <li><strong>"F"</strong>:前進しながら描画</li>
+                        <li><strong>"+"</strong>:右に一定の角度回転</li>
+                        <li><strong>"-"</strong>:左に一定の角度回転</li>
+                        <li><strong>"["</strong>:現在の位置、角度を保存</li>
+                        <li><strong>"]"</strong>:保存した状態を復元</li>
+                        <li><strong>"Axiom:"</strong>:初めの文字列を指定</li>
+                        <li><strong>";"</strong>:命令を区切る</li>
+                        <li><strong>"->"</strong>:左辺を右辺に置換</li>
+                    </ul>
+                </div>
+                <div class="tabs" class="paramtab">
+                    <div>初期座標　　:<input class="inputnum" type="number">,<input class="inputnum" type="number"></div>
+                    <div>初期角度　　:<input class="inputnum" type="number">°</div>
+                    <div>角度　　　　:<input class="inputnum" type="number">°</div>
+                    <div>線の長さ　　:<input class="inputnum" type="number"></div>
+                    <div>グラフの範囲:<input class="inputnum" type="number"></div>
+                    <div>反復回数　　:<input class="inputnum" type="number"></div>
+                </div>
+                <div class="tabs">
+                    <textarea id="logarea" rows="5" readonly placeholder="ここにログが表示されます"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
