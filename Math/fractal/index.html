@@ -3,3 +3,5 @@ t=document.querySelector("canvas").getContext("2d")
 for(x=0;x<3e2;x++){for(y=0;y<3e2;y++){n=((x,y)=>{X=x,Y=y,c=0;while(c<99){
 if(X*X+Y*Y>4){return c}z=X*X-Y*Y+x;Y=2*X*Y+y;X=z;c++}return 0})
 (x/100-2,y/100-1.5);t.fillStyle="#11"+n;t.fillRect(x,y,1,1)}}</script>
+
+// 300バイトでマンデルブロ集合
