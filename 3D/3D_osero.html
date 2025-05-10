@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3Dオセロ</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        canvas {
+            position: absolute;
+        }
+
+        p {
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin: 0.5em;
+            font-family: monospace;
+            font-size: 20px;
+            color: #f0f0f0;
+        }
+    </style>
+</head>
+
+<body oncontextmenu="return false">
+    <canvas></canvas>
+    <p id="description">WASD/矢印:回転,R:リセット</p>
+    <script src=util.js></script>
+    <script src=draw.js></script>
+    <script src=osero_script.js></script>
+</body>
+
+</html>
