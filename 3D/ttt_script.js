@@ -1,8 +1,6 @@
-// main.js
-
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
-const size = 3;
+let size = 3;
 const center = (size - 1) / 2;
 const cameraPosition = { x: center, y: center, z: -size };
 const rotateCenter = { x: center, y: center, z: center };
