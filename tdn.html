@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TDN表記変換</title>
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/190512328">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <style>
+        html,
+        body {
+            margin: 0;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ui {
+            background-color: #ccc;
+            border-radius: 0.5em;
+            border: 1px solid black;
+            padding: 1% 2%;
+            position: relative;
+        }
+
+        h1,
+        h2,
+        p {
+            margin: 0;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24;
+        }
+
+        textarea {
+            resize: none;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            cursor: pointer;
+        }
+
+        summary:hover{
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ui">
+        <h1>TDN表記変換器</h1>
+        <hr>
+        <textarea id="input" rows="4" placeholder="ここに入力(例:まなつのよるのいんむ)"></textarea>
+        <p>変換⬇</p>
+        <textarea id="output" rows="4" readonly></textarea>
+        <button id="copyButton">
+            <span class="material-symbols-outlined">content_copy</span>
+            <span>変換結果をコピーする</span>
+        </button>
+        <button id="cvtSizeBtn">
+            <span class="material-symbols-outlined">match_case</span>
+            <span id="cvtSizeBtnSpan">変換結果を全て大文字にする</span>
+        </button>
+        <hr>
+        <details id="use">
+            <summary id="useSummary">使い方を表示</summary>
+            <h2>使い方</h2>
+            <p>入力された文字を<a href="https://dic.pixiv.net/a/TDN%E8%A1%A8%E8%A8%98">TDN表記</a>に変換します。</p>
+            <p>ひらがな、カタカナで入力できます。</p>
+            <p>漢字やアルファベットなどのその他の文字、一部のひらがな、カタカナは変換できません。</p>
+        </details>
+    </div>
+
+    <script>
+        const input = document.getElementById("input");
+        const output = document.getElementById("output");
+        const copyButton = document.getElementById("copyButton");
+        const cvtSIzeButton = document.getElementById("cvtSizeBtn");
+        const cvtSizeBtnSpan = document.getElementById("cvtSizeBtnSpan");
+        const use = document.getElementById("use");
+        const useSummary = document.getElementById("useSummary");
+
+        let isUpperCase = false;
+
+        input.oninput = convert;
+        copyButton.onclick = _ => navigator.clipboard.writeText(output.value);
+        cvtSIzeButton.onclick = _ => {
+            isUpperCase = !isUpperCase;
+            cvtSizeBtnSpan.textContent = `変換結果を全て${isUpperCase ? '大' : '小'}文字にする`;
+            convert();
+        };
+        use.ontoggle = _ => useSummary.textContent = use.open ? "使い方を非表示" : "使い方を表示";
+
+        function convert() {
+            const converted = input.value.split("").map(e => replace[e] ?? e).join("");
+            output.value = isUpperCase ? converted.toUpperCase() : converted
+        }
+
+        const replace = {
+            あ: "a", い: "i", う: "u", え: "e", お: "o",
+            か: "k", き: "k", く: "k", け: "k", こ: "k",
+            さ: "s", し: "s", す: "s", せ: "s", そ: "s",
+            た: "t", ち: "t", つ: "t", て: "t", と: "t",
+            な: "n", に: "n", ぬ: "n", ね: "n", の: "n",
+            は: "h", ひ: "h", ふ: "h", へ: "h", ほ: "h",
+            ま: "m", み: "m", む: "m", め: "m", も: "m",
+            や: "y", 𛀆: "y", ゆ: "y", 𛀁: "y", よ: "y",
+            ら: "r", り: "r", る: "r", れ: "r", ろ: "r",
+            わ: "w", ゐ: "w", 𛄟: "w", ゑ: "w", を: "w",
+            ん: "n",
+
+            が: "g", ぎ: "g", ぐ: "g", げ: "g", ご: "g",
+            ざ: "z", じ: "z", ず: "z", ぜ: "z", ぞ: "z",
+            だ: "d", ぢ: "d", づ: "d", で: "d", ど: "d",
+            ば: "b", び: "b", ぶ: "b", べ: "b", ぼ: "b",
+            ぱ: "p", ぴ: "p", ぷ: "p", ぺ: "p", ぽ: "p",
+            ゔ: "v",
+
+            ぁ: "a", ぃ: "i", ぅ: "u", ぇ: "e", ぉ: "o",
+            ゃ: "y", ゅ: "y", ょ: "y", っ: "t", ゎ: "w",
+
+
+            ア: "a", イ: "i", ウ: "u", エ: "e", オ: "o",
+            カ: "k", キ: "k", ク: "k", ケ: "k", コ: "k",
+            サ: "s", シ: "s", ス: "s", セ: "s", ソ: "s",
+            タ: "t", チ: "t", ツ: "t", テ: "t", ト: "t",
+            ナ: "n", ニ: "n", ヌ: "n", ネ: "n", ノ: "n",
+            ハ: "h", ヒ: "h", フ: "h", ヘ: "h", ホ: "h",
+            マ: "m", ミ: "m", ム: "m", メ: "m", モ: "m",
+            ヤ: "y", 𛄠: "y", ユ: "y", 𛀀: "y", ヨ: "y",
+            ラ: "r", リ: "r", ル: "r", レ: "r", ロ: "r",
+            ワ: "w", ヰ: "w", 𛄢: "w", ヱ: "w", ヲ: "w",
+            ン: "n",
+
+            ガ: "g", ギ: "g", グ: "g", ゲ: "g", ゴ: "g",
+            ザ: "z", ジ: "z", ズ: "z", ゼ: "z", ゾ: "z",
+            ダ: "d", ヂ: "d", ヅ: "d", デ: "d", ド: "d",
+            バ: "b", ビ: "b", ブ: "b", ベ: "b", ボ: "b",
+            パ: "p", ピ: "p", プ: "p", ペ: "p", ポ: "p",
+            ヴ: "v",
+
+            ァ: "a", ィ: "i", ゥ: "u", ェ: "e", ォ: "o",
+            ャ: "y", ュ: "y", ョ: "y", ッ: "t", ヮ: "w",
+            ヵ: "k", ㇰ: "k", ヶ: "k", ㇱ: "s", ㇲ: "s",
+            ㇳ: "t", ㇴ: "n", ㇵ: "h", ㇶ: "h", ㇷ: "h",
+            ㇸ: "h", ㇹ: "h", ㇷ゚: "p", ㇺ: "m", ㇻ: "r",
+            ㇼ: "r", ㇽ: "r", ㇾ: "r", ㇿ: "r",
+
+            ｱ: "a", ｲ: "i", ｳ: "u", ｴ: "e", ｵ: "o",
+            ｶ: "k", ｷ: "k", ｸ: "k", ｹ: "k", ｺ: "k",
+            ｻ: "s", ｼ: "s", ｽ: "s", ｾ: "s", ｿ: "s",
+            ﾀ: "t", ﾁ: "t", ﾂ: "t", ﾃ: "t", ﾄ: "t",
+            ﾅ: "n", ﾆ: "n", ﾇ: "n", ﾈ: "n", ﾉ: "n",
+            ﾊ: "h", ﾋ: "h", ﾌ: "h", ﾍ: "h", ﾎ: "h",
+            ﾏ: "m", ﾐ: "m", ﾑ: "m", ﾒ: "m", ﾓ: "m",
+            ﾔ: "y", ﾕ: "y", ﾖ: "y",
+            ﾗ: "r", ﾘ: "r", ﾙ: "r", ﾚ: "r", ﾛ: "r",
+            ﾜ: "w", 𛄢: "w", ｦ: "w",
+            ﾝ: "n",
+
+            ｶﾞ: "g", ｷﾞ: "g", ｸﾞ: "g", ｹﾞ: "g", ｺﾞ: "g",
+            ｻﾞ: "z", ｼﾞ: "z", ｽﾞ: "z", ｾﾞ: "z", ｿﾞ: "z",
+            ﾀﾞ: "d", ﾁﾞ: "d", ﾂﾞ: "d", ﾃﾞ: "d", ﾄﾞ: "d",
+            ﾊﾞ: "b", ﾋﾞ: "b", ﾌﾞ: "b", ﾍﾞ: "b", ﾎﾞ: "b",
+            ﾊﾟ: "p", ﾋﾟ: "p", ﾌﾟ: "p", ﾍﾟ: "p", ﾎﾟ: "p",
+            ｳﾞ: "v",
+
+            ｧ: "a", ｨ: "i", ｩ: "u", ｪ: "e", ｫ: "o",
+            ｯ: "t", ｬ: "y", ｭ: "y", ｮ: "y",
+        }
+    </script>
+</body>
+
+</html>
